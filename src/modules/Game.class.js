@@ -46,11 +46,13 @@ class Game {
   }
 
   restart() {
-    this.status = 'idle';
+    this.status = 'playing';
     this.board = this.initialState.map((row) => [...row]);
     this.score = 0;
+    this.addRandomTile();
+    this.addRandomTile();
     this.updateUI();
-    this.updateButtonToStart();
+    this.updateButtonToRestart();
     this.hideMessages();
   }
 
@@ -230,11 +232,9 @@ class Game {
     if (this.checkWin()) {
       this.status = 'win';
       this.displayMessage('win');
-      this.updateButtonToStart();
     } else if (this.checkLose()) {
       this.status = 'lose';
       this.displayMessage('lose');
-      this.updateButtonToStart();
     }
   }
 
@@ -246,7 +246,6 @@ class Game {
         }
       }
     }
-
     return false;
   }
 
@@ -256,7 +255,6 @@ class Game {
         if (this.board[row][col] === 0) {
           return false;
         }
-
         if (
           (col < 3 && this.board[row][col] === this.board[row][col + 1]) ||
           (row < 3 && this.board[row][col] === this.board[row + 1][col])
@@ -265,7 +263,6 @@ class Game {
         }
       }
     }
-
     return true;
   }
 
@@ -281,7 +278,6 @@ class Game {
         if (cell) {
           cell.textContent = value === 0 ? '' : value;
           cell.className = 'field-cell';
-
           if (value) {
             cell.classList.add(`field-cell--${value}`);
           }
@@ -291,7 +287,6 @@ class Game {
     }
 
     const scoreElement = document.querySelector('.game-score');
-
     if (scoreElement) {
       scoreElement.textContent = this.score;
     }
@@ -322,7 +317,6 @@ class Game {
 
   updateButtonToRestart() {
     const button = document.querySelector('.button');
-
     if (button) {
       button.textContent = 'Restart';
       button.classList.remove('start');
@@ -331,16 +325,6 @@ class Game {
     }
   }
 
-  updateButtonToStart() {
-    const button = document.querySelector('.button');
-
-    if (button) {
-      button.textContent = 'Start';
-      button.classList.remove('restart');
-      button.classList.add('start');
-      button.onclick = () => this.start();
-    }
-  }
 
   displayMessage(type) {
     const messageElementWin = document.querySelector('.message-win');
@@ -361,11 +345,9 @@ class Game {
     if (messageElementWin) {
       messageElementWin.classList.add('hidden');
     }
-
     if (messageElementLose) {
       messageElementLose.classList.add('hidden');
     }
-
     if (messageElementStart) {
       messageElementStart.classList.add('hidden');
     }
